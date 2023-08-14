@@ -127,7 +127,10 @@ def main():
         recursive = True
     else:
         recursive = False
+    
     archives = get_archives(folder, recursive)
+    if len(archives) == 0:
+        exit() 
 
     output = input("Enter the path to the output directory: ")
     print("Output path:", output)
