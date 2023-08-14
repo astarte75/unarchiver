@@ -8,22 +8,33 @@ logging.basicConfig(filename='app.log', level=logging.DEBUG)
 
 # Helper functions
 
-def get_archives(folder, recursive=False):
-    archives = []
+# Recursively walk folder tree to find archives
+def get_archives(folder, recursive, archive_type):
+    archives = []   
+    if archive_type == 'rar':
+        exts = ['.rar']
+    elif archive_type == 'zip':
+        exts = ['.zip']
+    else:
+        exts = ['.rar', '.zip']
     
     if recursive:
         for root, dirs, files in os.walk(folder):
+            # Check each file
             for file in files:
-                if file.endswith('.rar') or file.endswith('.zip'):
+                if file.endswith(tuple(exts)):
+                    # Append matching files to list
                     archive = os.path.join(root, file)
                     archives.append(archive)
     elif not recursive:
         for file in os.listdir(folder):
-            if file.endswith(('.rar', '.zip')): 
+            if file.endswith(tuple(exts)): 
                 archive = os.path.join(folder, file)
                 archives.append(archive)
+    # Return empty list if no archives found
     elif not archives:
         print("No archives found in the folder")
+        exit()
 
     return archives
 
@@ -105,7 +116,7 @@ def extract_archive(archive, output):
     if archive.endswith('.rar') and is_archive_password_protected(archive):
         password = input(f"Enter password for {archive}: ")
         extraction_command = ['unrar', 'x', '-p' + password, archive, output]
-    if archive.endswith('.rar'):
+    elif archive.endswith('.rar'):
         extraction_command = ['unrar', 'x', archive, output]
     elif archive.endswith('.zip'):
         extraction_command = ['unzip', archive, '-d', output]
@@ -121,7 +132,11 @@ def extract_archive(archive, output):
     print("\nDone!")
 
 def main():
+    archive_type = input("Find only .rar, only .zip, or both? (rar/zip/both): ")
     folder = input("Enter the path to the folder containing archives: ")
+    if not os.path.exists(folder):
+        print("Invalid folder")
+        main()
     print("Folder path:", folder)
     recursive = input("Search subdirectories? (y/n): ")
     if recursive.lower() == 'y':
@@ -129,8 +144,14 @@ def main():
     else:
         recursive = False
     
-    archives = get_archives(folder, recursive)
+    archives = get_archives(folder, recursive, archive_type)
+    #archives = filter_multiparts(archives)
+
     if len(archives) == 0:
+        print("No archives found in the folder")
+        print("Exiting program")
+        logging.info("No archives found in the folder")
+        logging.info("Exiting program")
         exit() 
 
     output = input("Enter the path to the output directory: ")
@@ -139,10 +160,7 @@ def main():
     if not os.path.exists(folder) or not os.path.exists(output):
         print("Invalid folder or output path.")
         return
-
-    archives = get_archives(folder)
-    archives = filter_multiparts(archives)
-
+ 
     display_archives(archives)
 
     selected = get_user_selection(archives)
