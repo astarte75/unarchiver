@@ -26,7 +26,7 @@ def filter_multiparts(archives):
     for archive in archives:
         name = os.path.basename(archive)
         if '.r' in name:
-        base = name.split('.r')[0]
+            base = name.split('.r')[0]
         if base not in seen:
             seen.add(base)
             # Check if it's the first file
