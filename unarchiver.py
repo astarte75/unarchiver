@@ -31,9 +31,9 @@ def filter_multiparts(archives):
             seen.add(base)
             # Check if it's the first file
             if name.endswith('.r01') or name.endswith('.r001'):
-            filtered.append(archive)
+                filtered.append(archive)
         else:
-        filtered.append(archive)
+            filtered.append(archive)
     return filtered
 
 def display_archives(archives):
