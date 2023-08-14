@@ -91,22 +91,22 @@ def extract_archive(archive, output):
 
             percent = extracted_size / total_size * 100
             print("\r[%-20s] %.2f%%" % ('='*int(percent/5), percent), end='')
-            if archive.endswith('.rar') and is_archive_password_protected(archive):
-                password = input(f"Enter password for {archive}: ")
-                extraction_command = ['unrar', 'x', '-p' + password, archive, output]
-            if archive.endswith('.rar'):
-                extraction_command = ['unrar', 'x', archive, output]
-            elif archive.endswith('.zip'):
-                extraction_command = ['unzip', archive, '-d', output]
-            else:
-                print(f"Unsupported archive format: {archive}")
-                return
+    if archive.endswith('.rar') and is_archive_password_protected(archive):
+        password = input(f"Enter password for {archive}: ")
+        extraction_command = ['unrar', 'x', '-p' + password, archive, output]
+    if archive.endswith('.rar'):
+        extraction_command = ['unrar', 'x', archive, output]
+    elif archive.endswith('.zip'):
+        extraction_command = ['unzip', archive, '-d', output]
+    else:
+        print(f"Unsupported archive format: {archive}")
+        return
 
-            try:
-                subprocess.run(extraction_command, check=True)
-                logging.info(f'Extracted {archive} to {output}')
-            except subprocess.CalledProcessError as e:
-                logging.error(f"Error extracting {archive}: {e}")
+    try:
+        subprocess.run(extraction_command, check=True)
+        logging.info(f'Extracted {archive} to {output}')
+    except subprocess.CalledProcessError as e:
+        logging.error(f"Error extracting {archive}: {e}")
     print("\nDone!")
 
 def main():
