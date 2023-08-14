@@ -1,4 +1,6 @@
 # Python script to extract zip and rar files
+## working on it - not for production
+
 Here is a high-level summary of what this Python script does:
 
 - It provides functionality to extract archive files (.rar, .zip) from a source folder to a destination folder.
