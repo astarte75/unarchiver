@@ -42,10 +42,16 @@ def display_archives(archives):
     for i, archive in enumerate(archives):
         date = datetime.fromtimestamp(get_modified_time(archive))
         print(f"{i + 1}. {archive} ({date.strftime('%Y-%m-%d')})")
+    print("0. exit")
+
 
 def get_user_selection(archives):
     while True:
-        input_str = input("Enter archive numbers (comma separated): ")
+        input_str = input("Enter archive numbers (comma separated) or 'exit': ")
+        if input_str == 'exit':
+            print("Exiting program")
+            return []
+        
         selections = input_str.split(',')
 
         try:
