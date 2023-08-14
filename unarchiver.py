@@ -21,20 +21,20 @@ def get_modified_time(archive):
     return os.path.getmtime(archive)
 
 def filter_multiparts(archives):
-  filtered = [] 
-  seen = set()
-  for archive in archives:
-    name = os.path.basename(archive)
-    if '.r' in name:
-      base = name.split('.r')[0]
-      if base not in seen:
-        seen.add(base)
-        # Check if it's the first file
-        if name.endswith('.r01') or name.endswith('.r001'):
-          filtered.append(archive)
-    else:
-      filtered.append(archive)
-  return filtered
+    filtered = [] 
+    seen = set()
+    for archive in archives:
+        name = os.path.basename(archive)
+        if '.r' in name:
+        base = name.split('.r')[0]
+        if base not in seen:
+            seen.add(base)
+            # Check if it's the first file
+            if name.endswith('.r01') or name.endswith('.r001'):
+            filtered.append(archive)
+        else:
+        filtered.append(archive)
+    return filtered
 
 def display_archives(archives):
     archives.sort(key=get_modified_time)
