@@ -74,23 +74,43 @@ def extract_archive(archive, output):
     Extract the provided archive file to the specified output directory.
     Supports .rar and .zip archive formats. Prompt for password if needed.
     """
-    if archive.endswith('.rar') and is_archive_password_protected(archive):
-        password = input(f"Enter password for {archive}: ")
-        extraction_command = ['unrar', 'x', '-p' + password, archive, output]
-    if archive.endswith('.rar'):
-        extraction_command = ['unrar', 'x', archive, output]
-    elif archive.endswith('.zip'):
-        extraction_command = ['unzip', archive, '-d', output]
-    else:
-        print(f"Unsupported archive format: {archive}")
-        return
+    
+    total_size = os.path.getsize(archive)
+    extracted_size = 0
 
-    try:
-        subprocess.run(extraction_command, check=True)
-        logging.info(f'Extracted {archive} to {output}')
-    except subprocess.CalledProcessError as e:
-        logging.error(f"Error extracting {archive}: {e}")
+    with open(archive, 'rb') as f:
 
+        print("Extracting...", end='')
+
+        while True:
+            chunk = f.read(1048576)
+            if not chunk:
+                break
+
+            extracted_size += len(chunk)
+
+            percent = extracted_size / total_size * 100
+            print("\r[%-20s] %.2f%%" % ('='*int(percent/5), percent), end='')
+
+
+
+            if archive.endswith('.rar') and is_archive_password_protected(archive):
+                password = input(f"Enter password for {archive}: ")
+                extraction_command = ['unrar', 'x', '-p' + password, archive, output]
+            if archive.endswith('.rar'):
+                extraction_command = ['unrar', 'x', archive, output]
+            elif archive.endswith('.zip'):
+                extraction_command = ['unzip', archive, '-d', output]
+            else:
+                print(f"Unsupported archive format: {archive}")
+                return
+
+            try:
+                subprocess.run(extraction_command, check=True)
+                logging.info(f'Extracted {archive} to {output}')
+            except subprocess.CalledProcessError as e:
+                logging.error(f"Error extracting {archive}: {e}")
+    print("\nDone!")
 
 def main():
     folder = input("Enter the path to the folder containing archives: ")
