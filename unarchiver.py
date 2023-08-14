@@ -12,7 +12,7 @@ def get_archives(folder):
     archives = []
     for root, dirs, files in os.walk(folder):
         for file in files:
-            if file.endswith('.rar'):
+            if file.endswith('.rar') or file.endswith('.zip'):
                 archive = os.path.join(root, file)
                 archives.append(archive)
     return archives
@@ -91,9 +91,6 @@ def extract_archive(archive, output):
 
             percent = extracted_size / total_size * 100
             print("\r[%-20s] %.2f%%" % ('='*int(percent/5), percent), end='')
-
-
-
             if archive.endswith('.rar') and is_archive_password_protected(archive):
                 password = input(f"Enter password for {archive}: ")
                 extraction_command = ['unrar', 'x', '-p' + password, archive, output]
