@@ -153,7 +153,7 @@ def main():
     archive_type = input("Find only .rar, only .zip, or both? (rar/zip/both): ")
     folder = input("Enter the path to the folder containing archives: ")
     if not os.path.exists(folder):
-        print("Invalid folder")
+        print("Invalid folder.")
         main()
     print("Folder path:", folder)
     recursive = input("Search subdirectories? (y/n): ")
@@ -176,11 +176,18 @@ def main():
         logging.info("Exiting program")
         exit() 
 
-    output = input("Enter the path to the output directory: ")
+    for archive in archives:
+        archive_dir = os.path.dirname(archive)
+        print("Extracting to: {} ".format(archive_dir))
+        output = input("Enter alternative directory (or press enter):")
+
+    if not output:
+        output = archive_dir
+
     print("Output path:", output)
 
-    if not os.path.exists(folder) or not os.path.exists(output):
-        print("Invalid folder or output path.")
+    if not os.path.exists(output):
+        print("Invalid output path.")
         return
  
     display_archives(archives)
