@@ -148,8 +148,8 @@ def main():
     archives = get_archives(folder, recursive, archive_type)
     
     # Filter multipart rars
-    if archive_type == 'rar':
-        archives = filter_multiparts(archives)
+    # if archive_type == 'rar':
+    #    archives = filter_multiparts(archives)
 
     if len(archives) == 0:
         print("No archives found in the folder")
