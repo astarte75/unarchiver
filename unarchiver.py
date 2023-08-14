@@ -10,19 +10,20 @@ logging.basicConfig(filename='app.log', level=logging.DEBUG)
 
 def get_archives(folder, recursive=False):
     archives = []
-    if not archives:
-        print("No archives found in the folder")
-    elif recursive:
+    
+    if recursive:
         for root, dirs, files in os.walk(folder):
             for file in files:
                 if file.endswith('.rar') or file.endswith('.zip'):
                     archive = os.path.join(root, file)
                     archives.append(archive)
-    else:
+    elif not recursive:
         for file in os.listdir(folder):
             if file.endswith(('.rar', '.zip')): 
                 archive = os.path.join(folder, file)
                 archives.append(archive)
+    elif not archives:
+        print("No archives found in the folder")
 
     return archives
 
