@@ -25,6 +25,7 @@ def filter_multiparts(archives):
     seen = set()
     for archive in archives:
         name = os.path.basename(archive)
+        base = ''
         if '.r' in name:
             base = name.split('.r')[0]
         if base not in seen:
@@ -111,7 +112,9 @@ def extract_archive(archive, output):
 
 def main():
     folder = input("Enter the path to the folder containing archives: ")
+    print("Folder path:", folder)
     output = input("Enter the path to the output directory: ")
+    print("Output path:", output)
 
     if not os.path.exists(folder) or not os.path.exists(output):
         print("Invalid folder or output path.")
