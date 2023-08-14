@@ -8,13 +8,22 @@ logging.basicConfig(filename='app.log', level=logging.DEBUG)
 
 # Helper functions
 
-def get_archives(folder):
+def get_archives(folder, recursive=False):
     archives = []
-    for root, dirs, files in os.walk(folder):
-        for file in files:
-            if file.endswith('.rar') or file.endswith('.zip'):
-                archive = os.path.join(root, file)
+    if not archives:
+        print("No archives found in the folder")
+    elif recursive:
+        for root, dirs, files in os.walk(folder):
+            for file in files:
+                if file.endswith('.rar') or file.endswith('.zip'):
+                    archive = os.path.join(root, file)
+                    archives.append(archive)
+    else:
+        for file in os.listdir(folder):
+            if file.endswith(('.rar', '.zip')): 
+                archive = os.path.join(folder, file)
                 archives.append(archive)
+
     return archives
 
 def get_modified_time(archive):
@@ -113,6 +122,13 @@ def extract_archive(archive, output):
 def main():
     folder = input("Enter the path to the folder containing archives: ")
     print("Folder path:", folder)
+    recursive = input("Search subdirectories? (y/n): ")
+    if recursive.lower() == 'y':
+        recursive = True
+    else:
+        recursive = False
+    archives = get_archives(folder, recursive)
+
     output = input("Enter the path to the output directory: ")
     print("Output path:", output)
 
