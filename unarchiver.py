@@ -3,6 +3,8 @@ import logging
 from datetime import datetime
 import subprocess
 
+NUM_PER_PAGE = 10
+
 # Logging setup
 logging.basicConfig(filename='app.log', level=logging.DEBUG)
 
@@ -61,10 +63,26 @@ def filter_multiparts(archives):
 def display_archives(archives):
     archives.sort(key=get_modified_time)
     print("Archives:")
-    for i, archive in enumerate(archives):
-        date = datetime.fromtimestamp(get_modified_time(archive))
-        print(f"{i + 1}. {archive} ({date.strftime('%Y-%m-%d')})")
-    print("0. exit")
+    page = 0
+    num_archives = len(archives)
+    
+    while True:
+
+        start = page * NUM_PER_PAGE
+        if start + NUM_PER_PAGE > num_archives:
+            end = num_archives
+        else:
+            end = start + NUM_PER_PAGE
+
+        for i, archive in enumerate(archives[start:end], start=start):
+            date = datetime.fromtimestamp(get_modified_time(archive))
+            print(f"{i + 1}. {archive} ({date.strftime('%Y-%m-%d')})")
+        print()
+        page += 1
+        if end == num_archives:
+            break
+        input("Enter to continue...")
+        print("0. exit")
 
 
 def get_user_selection(archives):
