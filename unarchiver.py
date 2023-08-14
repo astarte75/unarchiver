@@ -48,8 +48,8 @@ def display_archives(archives):
 
 def get_user_selection(archives):
     while True:
-        input_str = input("Enter archive numbers (comma separated) or 'exit': ")
-        if input_str == 'exit':
+        input_str = input("Enter archive numbers (comma separated) or 0 to exit: ")
+        if input_str == '0':
             print("Exiting program")
             return []
         
